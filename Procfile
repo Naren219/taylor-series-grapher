@@ -1,1 +1,1 @@
-web: bokeh serve --log-level=debug --port=$PORT --host=taylor-webapp.herokuapp.com --use-xheaders taylor_webapp.py
+web: bokeh serve --port=$PORT --allow-websocket-origin=taylor-webapp.herokuapp.com --address=0.0.0.0 --use-xheaders taylor-webapp.py
