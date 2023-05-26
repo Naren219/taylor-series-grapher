@@ -16,6 +16,7 @@ conversion_list = ['^   = **',
 
 format_widget = '<a>Formatting Guide:</a><ul>{}</ul>'.format(''.join(f'<li>{item}</li>' for item in conversion_list))
 
+print("running")
 list_text = Div(text=format_widget)
 a_text = Div(text="The center value (a) will be in terms of...")
 step_size_radio = RadioButtonGroup(labels = ["Integers", "Pi Approximations"], active = 0)
