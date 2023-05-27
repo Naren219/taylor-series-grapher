@@ -17,6 +17,7 @@ conversion_list = ['^   = **',
 
 format_widget = '<a>Formatting Guide:</a><ul>{}</ul>'.format(''.join(f'<li>{item}</li>' for item in conversion_list))
 
+title = Div(text='<h1 style="font-family: Times">Taylor Polynomial Visualizer</h1>')
 list_text = Div(text=format_widget)
 a_text = Div(text="The center value (a) will be in terms of...")
 step_size_radio = RadioButtonGroup(labels = ["Integers", "Pi Approximations"], active = 0, width=240)
@@ -173,5 +174,5 @@ step_size_radio.on_change('active', choose_step_size)
 toggle_ROC.on_change('active', toggle_ROC_lines)
 toggle_error.on_change('active', toggle_error_CB)
 
-layout = column(list_text, equation_input, plot, equation_output, toggle_ROC, toggle_error, a_text, step_size_radio, a_slider, deg_input)
+layout = column(title, list_text, equation_input, plot, equation_output, toggle_ROC, toggle_error, a_text, step_size_radio, a_slider, deg_input)
 curdoc().add_root(layout)
