@@ -1,3 +1,4 @@
+import warnings
 import math
 import numpy as np
 import sympy as sp
@@ -18,7 +19,7 @@ format_widget = '<a>Formatting Guide:</a><ul>{}</ul>'.format(''.join(f'<li>{item
 
 list_text = Div(text=format_widget)
 a_text = Div(text="The center value (a) will be in terms of...")
-step_size_radio = RadioButtonGroup(labels = ["Integers", "Pi Approximations"], active = 0, width=175)
+step_size_radio = RadioButtonGroup(labels = ["Integers", "Pi Approximations"], active = 0, width=240)
 equation_input = TextInput(title="Enter the equation you want to use (default is sin(x)):", value = "")
 equation_output = Div(text=r"$$\sin{\left(x \right)}\approx$$")
 
@@ -63,7 +64,7 @@ ROC_source_left = ColumnDataSource(data=dict(x=a_marker-np.ones_like(a_marker), 
 ROC_source_right = ColumnDataSource(data=dict(x=a_marker+np.ones_like(a_marker), y=x))
 
 plot = figure(title="Graph with Taylor Polynomial Approximation", y_range=(-10, 10), width=500, height=500)
-plot.aspect_ratio = 1.2  # Set a specific aspect ratio
+plot.aspect_ratio = 1.2
 plot.line('x', 'y', source=source, line_width=3, line_alpha=1)
 plot.line('x', 'y', source=taylor_coords, line_width=3, line_alpha=0.6, line_color="purple")
 plot.line('x', 'y', source=marker_source, line_width=3, line_color="gold", line_dash="dashed")
@@ -78,8 +79,8 @@ ROC_bool = False
 
 a_slider = Slider(title="Choose a Center Value (a)", start=-h_size_int, end=h_size_int, step=int_step, value=0, width=500)
 deg_input = Slider(title="Degree of the Taylor Polynomial", start=0, end=20, step=1, value=0)
-toggle_ROC = Toggle(label='Toggle Radius of Convergence Lines', button_type='default', active=True, width=150)
-toggle_error = Toggle(label='Toggle Error Area', button_type='default', active=True, width=150)
+toggle_ROC = Toggle(label='Toggle Radius of Convergence Lines', button_type='default', active=True, width=240)
+toggle_error = Toggle(label='Toggle Error Area', button_type='default', active=True, width=240)
 
 def get_ROC(expr):
     global l_b, r_b, ROC_bool
@@ -133,13 +134,26 @@ def set_equation(attr, old, new):
     global source
     global y
     global l_b, r_b
+
     y_sp = sp.sympify(new)
     new_np = sp.lambdify(x_sp, y_sp, 'numpy')
-    new_eq = new_np(x)
+
+    with warnings.catch_warnings():
+        warnings.filterwarnings("error")
+        try:
+            new_eq = new_np(x)
+        except RuntimeWarning:
+            print("RuntimeWarning occurred!")
+            y_sp = sp.Pow(x_sp, 2)
+            new_np = sp.lambdify(x_sp, y_sp, 'numpy')
+            new_eq = new_np(x)
+        finally:
+            warnings.resetwarnings()
+
     y = new_eq
-    source.data = { 'x': x, 'y': new_eq }
+    source.data = {'x': x, 'y': new_eq}
     y_init = get_coeff(y_sp, a_slider.value)
-    taylor_coords.data = { 'x': x, 'y': y_init }
+    taylor_coords.data = {'x': x, 'y': y_init}
     get_ROC(y_sp)
     compute_error(x, y_init, new_eq)
     if l_b is None and r_b is None:
