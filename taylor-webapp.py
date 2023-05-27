@@ -16,10 +16,9 @@ conversion_list = ['^   = **',
 
 format_widget = '<a>Formatting Guide:</a><ul>{}</ul>'.format(''.join(f'<li>{item}</li>' for item in conversion_list))
 
-print("running")
 list_text = Div(text=format_widget)
 a_text = Div(text="The center value (a) will be in terms of...")
-step_size_radio = RadioButtonGroup(labels = ["Integers", "Pi Approximations"], active = 0)
+step_size_radio = RadioButtonGroup(labels = ["Integers", "Pi Approximations"], active = 0, width=175)
 equation_input = TextInput(title="Enter the equation you want to use (default is sin(x)):", value = "")
 equation_output = Div(text=r"$$\sin{\left(x \right)}\approx$$")
 
@@ -63,7 +62,8 @@ marker_source = ColumnDataSource(data=dict(x=a_marker, y=x))
 ROC_source_left = ColumnDataSource(data=dict(x=a_marker-np.ones_like(a_marker), y=x))
 ROC_source_right = ColumnDataSource(data=dict(x=a_marker+np.ones_like(a_marker), y=x))
 
-plot = figure(title="Graph with Taylor Polynomial Approximation", y_range=(-10, 10), width=400, height=400)
+plot = figure(title="Graph with Taylor Polynomial Approximation", y_range=(-10, 10), width=500, height=500)
+plot.aspect_ratio = 1.2  # Set a specific aspect ratio
 plot.line('x', 'y', source=source, line_width=3, line_alpha=1)
 plot.line('x', 'y', source=taylor_coords, line_width=3, line_alpha=0.6, line_color="purple")
 plot.line('x', 'y', source=marker_source, line_width=3, line_color="gold", line_dash="dashed")
@@ -76,10 +76,10 @@ plot.legend.background_fill_color = "white"
 plot.legend.background_fill_alpha = 0.5
 ROC_bool = False
 
-a_slider = Slider(title="Choose a Center Value (a)", start=-h_size_int, end=h_size_int, step=int_step, value=0)
+a_slider = Slider(title="Choose a Center Value (a)", start=-h_size_int, end=h_size_int, step=int_step, value=0, width=500)
 deg_input = Slider(title="Degree of the Taylor Polynomial", start=0, end=20, step=1, value=0)
-toggle_ROC = Toggle(label='Toggle Radius of Convergence Lines', button_type='default', active=True)
-toggle_error = Toggle(label='Toggle Error Area', button_type='default', active=True)
+toggle_ROC = Toggle(label='Toggle Radius of Convergence Lines', button_type='default', active=True, width=150)
+toggle_error = Toggle(label='Toggle Error Area', button_type='default', active=True, width=150)
 
 def get_ROC(expr):
     global l_b, r_b, ROC_bool
@@ -146,6 +146,7 @@ def set_equation(attr, old, new):
         l_b.visible, r_b.visible = False, False
 def toggle_ROC_lines(attr, old, new):
     if l_b is not None and r_b is not None:
+      if ROC_bool:
         l_b.visible = toggle_ROC.active
         r_b.visible = toggle_ROC.active
 def toggle_error_CB(attr, old, new):
@@ -158,5 +159,5 @@ step_size_radio.on_change('active', choose_step_size)
 toggle_ROC.on_change('active', toggle_ROC_lines)
 toggle_error.on_change('active', toggle_error_CB)
 
-layout = column(list_text, equation_input, plot, equation_output, toggle_ROC, toggle_error, a_text, step_size_radio, a_slider, deg_input, sizing_mode="stretch_width")
+layout = column(list_text, equation_input, plot, equation_output, toggle_ROC, toggle_error, a_text, step_size_radio, a_slider, deg_input)
 curdoc().add_root(layout)
