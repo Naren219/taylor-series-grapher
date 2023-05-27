@@ -23,6 +23,7 @@ a_text = Div(text="The center value (a) will be in terms of...")
 step_size_radio = RadioButtonGroup(labels = ["Integers", "Pi Approximations"], active = 0, width=240)
 equation_input = TextInput(title="Enter the equation you want to use (default is sin(x)):", value = "")
 equation_output = Div(text=r"$$\sin{\left(x \right)}\approx$$")
+link = Div(text='<span>Made by </span><a href="https://www.linkedin.com/in/naren-manikandan/" target="_blank">Naren Manikandan</a><span>. Check out the code </span><a href="https://github.com/Naren219/taylor-webapp" target="_blank">here</a><span>')
 
 h_size_int = 10
 pi_step = 1.571
@@ -174,5 +175,5 @@ step_size_radio.on_change('active', choose_step_size)
 toggle_ROC.on_change('active', toggle_ROC_lines)
 toggle_error.on_change('active', toggle_error_CB)
 
-layout = column(title, list_text, equation_input, plot, equation_output, toggle_ROC, toggle_error, a_text, step_size_radio, a_slider, deg_input)
+layout = column(title, list_text, equation_input, plot, equation_output, toggle_ROC, toggle_error, a_text, step_size_radio, a_slider, deg_input, link)
 curdoc().add_root(layout)
