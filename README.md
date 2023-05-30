@@ -12,4 +12,14 @@ If anyone has any suggestions/issues, please DM me. I'm really interested in mak
 
 LinkedIn: https://www.linkedin.com/in/naren-manikandan/
 
-### Made using Bokeh, Python, and Glitch (for hosting)!
+### Made using Bokeh, Python, and Glitch (for hosting and free)!
+
+## Developer Notes
+### start.sh
+```
+find ./ -name '*.pyc' -delete
+pip3 install -r requirements.txt
+pip3 install bokeh
+bokeh serve --port=3000 --address=0.0.0.0 --allow-websocket-origin=* --use-xheaders --disable-index taylor-webapp.py
+```
+In the run script, I had too use `--disable-index` to prevent Glitch from running Bokeh in the background (if it were two, Glitch won't actually open the website). Using this in the command forces Bokeh to run in the foreground instead. 
